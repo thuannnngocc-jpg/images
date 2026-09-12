@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tải Hình Ảnh</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+        
+        .card-image {
+            width: 100%;
+            height: 200px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 15px;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            word-break: break-word;
+            font-size: 14px;
+        }
+        
+        .card-size {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+        
+        .card-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+        
+        .btn-download {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-download:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-view {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-view:hover {
+            background: #e0e0e0;
+        }
+        
+        .stats {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Thư Viện Hình Ảnh - Tải Xuống</h1>
+        <div class="stats">Tổng cộng: <strong id="total-count">0</strong> hình ảnh</div>
+        
+        <div class="grid" id="images-grid">
+            <!-- Hình ảnh sẽ được thêm vào đây -->
+        </div>
+    </div>
+    
+    <script>
+        const images = [
+            { name: 'Messenger_creation_0AFF39E9-ABED-4C49-8484-F282EF8EA027.jpeg', size: '80.8 KB' },
+            { name: 'Screenshot_2026-09-10-23-42-15-959_com.zing.zalo-edit.jpg', size: '273.9 KB' },
+            { name: 'akaza.jpg', size: '132.8 KB' },
+            { name: 'bakugo.jpg', size: '134.7 KB' },
+            { name: 'cha tanjiro.jpg', size: '126.6 KB' },
+            { name: 'kaizu.jpg', size: '126.0 KB' },
+            { name: 'kratos.jpg', size: '123.6 KB' },
+            { name: 'luffy ignis.jpg', size: '128.7 KB' },
+            { name: 'luffy shirou.jpg', size: '130.1 KB' },
+            { name: 'main kaizu.jpg', size: '124.5 KB' },
+            { name: 'messi.jpg', size: '126.2 KB' },
+            { name: 'nữ kaizu.jpg', size: '130.8 KB' },
+            { name: 'sanji.jpg', size: '120.1 KB' },
+            { name: 'tanjiro.jpg', size: '134.0 KB' },
+            { name: 'thomas.jpg', size: '115.3 KB' },
+            { name: 'đại trụ khác.jpg', size: '132.7 KB' },
+            { name: 'đội trưởng mỹ.jpg', size: '119.6 KB' }
+        ];
+        
+        const baseRawUrl = 'https://raw.githubusercontent.com/thuannnngocc-jpg/images/main/';
+        const grid = document.getElementById('images-grid');
+        
+        images.forEach(img => {
+            const encodedName = encodeURIComponent(img.name);
+            const downloadUrl = baseRawUrl + encodedName;
+            const viewUrl = `https://github.com/thuannnngocc-jpg/images/blob/main/${encodedName}`;
+            
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-image">
+                    <img src="${downloadUrl}" alt="${img.name}" loading="lazy">
+                </div>
+                <div class="card-content">
+                    <div class="card-title">${img.name}</div>
+                    <div class="card-size">${img.size}</div>
+                    <div class="card-buttons">
+                        <a href="${downloadUrl}" download class="btn btn-download">⬇️ Tải</a>
+                        <a href="${viewUrl}" target="_blank" class="btn btn-view">👁️ Xem</a>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        
+        document.getElementById('total-count').textContent = images.length;
+    </script>
+</body>
+</html>
